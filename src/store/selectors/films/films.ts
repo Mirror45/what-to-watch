@@ -1,4 +1,5 @@
 import { RootState } from '@/store/index';
+import { Film } from '@/types/film';
 
 export const selectAllFilms = (state: RootState) => state.films.all;
 export const selectGenre = (state: RootState) => state.films.selectedGenre;
@@ -23,3 +24,9 @@ export const selectHasMore = (state: RootState) => {
     genre === 'All genres' ? state.films.all : state.films.all.filter((f) => f.genre === genre);
   return state.films.shownCount < filtered.length;
 };
+
+export const selectCurrentFilm = (state: RootState): Film | null => state.films.currentFilm;
+export const selectSimilarFilms = (state: RootState): Film[] => state.films.similarFilms;
+
+export const selectFavoriteFilms = (state: RootState): Film[] => state.films.favoriteFilms;
+export const selectIsFavoriteLoading = (state: RootState): boolean => state.films.isFavoriteLoading;
