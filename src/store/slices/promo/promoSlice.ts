@@ -1,5 +1,6 @@
 import { createSlice } from '@reduxjs/toolkit';
 
+import { updateFavoriteStatus } from '../films/filmThunks';
 import { fetchPromoFilm } from './promoThunks';
 import { PromoState } from './promoTypes';
 
@@ -29,6 +30,12 @@ const promoSlice = createSlice({
         state.isLoading = false;
         state.error =
           typeof action.payload === 'string' ? action.payload : 'Failed to load promo film';
+      })
+      .addCase(updateFavoriteStatus.fulfilled, (state, action) => {
+        const updatedFilm = action.payload;
+        if (state.data && state.data.id === updatedFilm.id) {
+          state.data = updatedFilm;
+        }
       });
   },
 });
