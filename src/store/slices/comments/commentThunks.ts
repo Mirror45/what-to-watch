@@ -8,11 +8,11 @@ import { handleError } from '@/utils/handleError';
 
 export const fetchComments = createAsyncThunk<
   CommentGet[],
-  { film_id: number },
+  { id: string },
   { rejectValue: ThunkError }
->(FETCH_COMMENTS, async ({ film_id }, thunkAPI) => {
+>(FETCH_COMMENTS, async ({ id }, thunkAPI) => {
   try {
-    const { data } = await api.get<CommentGet[]>(`/comments/${film_id}`);
+    const { data } = await api.get<CommentGet[]>(`/comments/${id}`);
     return data;
   } catch (error) {
     handleError(error, 'Failed to load comments');
@@ -22,11 +22,11 @@ export const fetchComments = createAsyncThunk<
 
 export const postComment = createAsyncThunk<
   CommentGet,
-  { film_id: number; commentData: CommentPost },
+  { id: string; commentData: CommentPost },
   { rejectValue: ThunkError }
->(POST_COMMENT, async ({ film_id, commentData }, thunkAPI) => {
+>(POST_COMMENT, async ({ id, commentData }, thunkAPI) => {
   try {
-    const { data } = await api.post<CommentGet>(`/comments/${film_id}`, commentData);
+    const { data } = await api.post<CommentGet>(`/comments/${id}`, commentData);
     return data;
   } catch (error) {
     handleError(error, 'Failed to post comment');

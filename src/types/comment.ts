@@ -1,5 +1,5 @@
 export interface CommentGet {
-  id: number;
+  id: string;
   user: {
     id: number;
     name: string;
