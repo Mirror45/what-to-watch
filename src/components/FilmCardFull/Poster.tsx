@@ -1,15 +1,16 @@
+// components/FilmCardFull/Poster.tsx
 import Image from 'next/image';
 import { JSX } from 'react';
 
-export function Poster(): JSX.Element {
+interface PosterProps {
+  posterImage: string;
+  filmName: string;
+}
+
+export function Poster({ posterImage, filmName }: PosterProps): JSX.Element {
   return (
     <div className="film-card__poster film-card__poster--small">
-      <Image
-        src="/img/the-grand-budapest-hotel-poster.jpg"
-        alt="The Grand Budapest Hotel poster"
-        width="218"
-        height="327"
-      />
+      <Image src={posterImage} alt={`${filmName} poster`} width="218" height="327" />
     </div>
   );
 }
