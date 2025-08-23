@@ -7,7 +7,7 @@ import { Loading } from '@/components/Loading';
 import { useAppSelector } from '@/store/hooks';
 import { selectPromo } from '@/store/selectors/promo/promo';
 
-import { PromoButtons } from './PromoButtons';
+import { ActionButtons } from '../ActionButtons';
 
 export const PromoFilm = memo((): JSX.Element => {
   const { data: film, isLoading } = useAppSelector(selectPromo);
@@ -51,7 +51,7 @@ export const PromoFilm = memo((): JSX.Element => {
               <span className="film-card__year">{film.released}</span>
             </p>
 
-            <PromoButtons />
+            <ActionButtons film={film} />
           </div>
         </div>
       </div>
