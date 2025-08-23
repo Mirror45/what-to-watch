@@ -1,18 +1,24 @@
+'use client';
+
 import Image from 'next/image';
-import Link from 'next/link';
+
+import { Film } from '@/types/film';
+
+import { ActionButtons } from '../ActionButtons';
 
 interface FilmHeroProps {
-  id: string;
+  film: Film;
 }
 
-export function FilmHero({ id }: FilmHeroProps) {
+export function FilmHero({ film }: FilmHeroProps) {
   return (
     <div className="film-card__hero">
       <div className="film-card__bg" style={{ height: '555px', width: '100%' }}>
         <Image
-          src="/img/bg-the-grand-budapest-hotel.jpg"
-          alt="The Grand Budapest Hotel"
+          src={film.backgroundImage}
+          alt={film.name}
           fill
+          priority
           style={{
             objectFit: 'cover',
             zIndex: 0,
@@ -24,29 +30,13 @@ export function FilmHero({ id }: FilmHeroProps) {
 
       <div className="film-card__wrap">
         <div className="film-card__desc">
-          <h2 className="film-card__title">The Grand Budapest Hotel</h2>
+          <h2 className="film-card__title">{film.name}</h2>
           <p className="film-card__meta">
-            <span className="film-card__genre">Drama</span>
-            <span className="film-card__year">2014</span>
+            <span className="film-card__genre">{film.genre}</span>
+            <span className="film-card__year">{film.released}</span>
           </p>
 
-          <div className="film-card__buttons">
-            <button className="btn btn--play film-card__button" type="button">
-              <svg viewBox="0 0 19 19" width="19" height="19">
-                <use xlinkHref="#play-s" />
-              </svg>
-              <span>Play</span>
-            </button>
-            <button className="btn btn--list film-card__button" type="button">
-              <svg viewBox="0 0 19 20" width="19" height="20">
-                <use xlinkHref="#add" />
-              </svg>
-              <span>My list</span>
-            </button>
-            <Link href={`/films/${id}/review`} className="btn film-card__button">
-              Add review
-            </Link>
-          </div>
+          <ActionButtons film={film} showAddReview />
         </div>
       </div>
     </div>
