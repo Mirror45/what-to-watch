@@ -1,36 +1,39 @@
-import { FilmCard } from '@/components/FilmCard';
+'use client';
 
-const moreFilms = [
-  {
-    id: '1',
-    title: 'Fantastic Beasts: The Crimes of Grindelwald',
-    image: '/img/fantastic-beasts-the-crimes-of-grindelwald.jpg',
-  },
-  {
-    id: '2',
-    title: 'Bohemian Rhapsody',
-    image: '/img/bohemian-rhapsody.jpg',
-  },
-  {
-    id: '3',
-    title: 'Macbeth',
-    image: '/img/macbeth.jpg',
-  },
-  {
-    id: '4',
-    title: 'Aviator',
-    image: '/img/aviator.jpg',
-  },
-];
+import { useEffect } from 'react';
+
+import { FilmCard } from '@/components/FilmCard';
+import { useAppDispatch, useAppSelector } from '@/store/hooks';
+import { selectCurrentFilm, selectSimilarFilms } from '@/store/selectors/films/films';
+import { fetchSimilarFilms } from '@/store/slices/films/filmThunks';
+
+const MAX_SIMILAR_FILMS = 4;
 
 export function MoreLikeThis() {
+  const dispatch = useAppDispatch();
+  const currentFilm = useAppSelector(selectCurrentFilm);
+  const similarFilms = useAppSelector(selectSimilarFilms);
+
+  useEffect(() => {
+    if (currentFilm) {
+      dispatch(fetchSimilarFilms({ id: currentFilm.id }));
+    }
+  }, [currentFilm, dispatch]);
+
+  if (!similarFilms || similarFilms.length === 0) {
+    return null;
+  }
+
   return (
     <section className="catalog catalog--like-this">
       <h2 className="catalog__title">More like this</h2>
       <div className="catalog__films-list">
-        {moreFilms.map((film) => (
-          <FilmCard key={film.id} id={film.id} title={film.title} image={film.image} />
-        ))}
+        {similarFilms
+          .filter((film) => film && film.id !== currentFilm?.id)
+          .slice(0, MAX_SIMILAR_FILMS)
+          .map((film) => (
+            <FilmCard key={film.id} film={film} />
+          ))}
       </div>
     </section>
   );
