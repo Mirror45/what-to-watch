@@ -1,7 +1,7 @@
 'use client';
 
-import { useRouter } from 'next/navigation';
-import { useEffect, useState } from 'react';
+import { useRouter, useSearchParams } from 'next/navigation';
+import { useState } from 'react';
 
 import { useAppDispatch, useAppSelector } from '@/store/hooks';
 import { loginUser } from '@/store/slices/auth';
@@ -9,20 +9,24 @@ import { loginUser } from '@/store/slices/auth';
 export default function LoginPage() {
   const dispatch = useAppDispatch();
   const router = useRouter();
-  const { token, error, status } = useAppSelector((state) => state.auth);
+  const searchParams = useSearchParams();
+  const { error, status } = useAppSelector((state) => state.auth);
 
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
 
-  useEffect(() => {
-    if (token) {
-      router.push('/');
-    }
-  }, [token, router]);
-
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    dispatch(loginUser({ email, password }));
+
+    try {
+      await dispatch(loginUser({ email, password })).unwrap();
+
+      const returnTo = searchParams.get('returnTo');
+
+      router.push(returnTo || '/');
+    } catch (err) {
+      console.error('Login failed:', err);
+    }
   };
 
   return (
