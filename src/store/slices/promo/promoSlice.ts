@@ -1,10 +1,10 @@
 import { createSlice } from '@reduxjs/toolkit';
 
+import { SLICE_NAME_PROMO } from '@/constants';
+
 import { updateFavoriteStatus } from '../films/filmThunks';
 import { fetchPromoFilm } from './promoThunks';
 import { PromoState } from './promoTypes';
-
-const SLICE_NAME_PROMO = 'promo';
 
 const initialState: PromoState = {
   data: null,

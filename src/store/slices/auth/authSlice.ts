@@ -1,9 +1,9 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
 
+import { SLICE_NAME_AUTH } from '@/constants';
+
 import { loginUser, logoutUser, restoreSession } from './authThunks';
 import { AuthInfo, AuthState } from './authTypes';
-
-const SLICE_NAME_AUTH = 'auth';
 
 const initialState: AuthState = {
   user: null,

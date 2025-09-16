@@ -1,5 +1,6 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
 
+import { INITIAL_SHOWN_COUNT, SLICE_NAME_FILMS } from '@/constants';
 import { Film } from '@/types/film';
 
 import {
@@ -11,20 +12,19 @@ import {
 } from './filmThunks';
 import { FilmsState } from './filmTypes';
 
-const SLICE_NAME_FILMS = 'films';
-const INITIAL_SHOWN_COUNT = 8;
-
 const initialState: FilmsState = {
   all: [],
-  currentFilm: null, // <-- Добавлено
-  similarFilms: [], // <-- Добавлено
-  favoriteFilms: [], // <-- Добавлено
+  currentFilm: null,
+  similarFilms: [],
+  favoriteFilms: [],
   isLoading: false,
-  isCurrentFilmLoading: false, // <-- Добавлено
-  isSimilarFilmsLoading: false, // <-- Добавлено
-  isFavoriteLoading: false, // <-- Добавлено
+  isCurrentFilmLoading: false,
+  isSimilarFilmsLoading: false,
+  isFavoriteLoading: false,
   error: null,
-  currentFilmError: null, // <-- Добавлено
+  currentFilmError: null,
+  similarFilmsError: null,
+  favoriteFilmsError: null,
   selectedGenre: 'All genres',
   shownCount: INITIAL_SHOWN_COUNT,
 };
@@ -40,15 +40,14 @@ const filmsSlice = createSlice({
     showMore: (state) => {
       state.shownCount += INITIAL_SHOWN_COUNT;
     },
-    // Редьюсер для очистки состояния текущего фильма при уходе со страницы
     clearCurrentFilm: (state) => {
-      // <-- Добавлено
       state.currentFilm = null;
       state.currentFilmError = null;
     },
   },
   extraReducers: (builder) => {
     builder
+      // Films list
       .addCase(fetchFilms.pending, (state) => {
         state.isLoading = true;
         state.error = null;
@@ -61,7 +60,7 @@ const filmsSlice = createSlice({
         state.isLoading = false;
         state.error = typeof action.payload === 'string' ? action.payload : 'Failed to load films';
       })
-      // Кейсы для fetchFilmById <-- Добавлено
+      // Current film
       .addCase(fetchFilmById.pending, (state) => {
         state.isCurrentFilmLoading = true;
         state.currentFilmError = null;
@@ -74,7 +73,7 @@ const filmsSlice = createSlice({
         state.isCurrentFilmLoading = false;
         state.currentFilmError = action.payload?.message || 'Failed to load film';
       })
-      // Кейсы для fetchSimilarFilms <-- Добавлено
+      // Similar films
       .addCase(fetchSimilarFilms.pending, (state) => {
         state.isSimilarFilmsLoading = true;
       })
@@ -82,11 +81,11 @@ const filmsSlice = createSlice({
         state.isSimilarFilmsLoading = false;
         state.similarFilms = action.payload;
       })
-      .addCase(fetchSimilarFilms.rejected, (state) => {
+      .addCase(fetchSimilarFilms.rejected, (state, action) => {
         state.isSimilarFilmsLoading = false;
-        // Можно добавить обработку ошибки, если нужно
+        state.similarFilmsError = action.payload?.message ?? 'Failed to load similar films';
       })
-      // Загрузка избранных фильмов
+      // Favorite films
       .addCase(fetchFavoriteFilms.pending, (state) => {
         state.isFavoriteLoading = true;
       })
@@ -94,20 +93,18 @@ const filmsSlice = createSlice({
         state.isFavoriteLoading = false;
         state.favoriteFilms = action.payload;
       })
-      .addCase(fetchFavoriteFilms.rejected, (state) => {
+      .addCase(fetchFavoriteFilms.rejected, (state, action) => {
         state.isFavoriteLoading = false;
+        state.favoriteFilmsError = action.payload?.message ?? 'Failed to load favorite films';
       })
-      // Обновление статуса фильма
+      // Update favorite status
       .addCase(updateFavoriteStatus.fulfilled, (state, action: PayloadAction<Film>) => {
         const updatedFilm = action.payload;
-        // Обновляем фильм в общем списке
         state.all = state.all.map((film) => (film.id === updatedFilm.id ? updatedFilm : film));
-        // Обновляем фильм в текущем открытом
         if (state.currentFilm && state.currentFilm.id === updatedFilm.id) {
           state.currentFilm = updatedFilm;
         }
-        // Обновляем список избранных
-        if (updatedFilm.isFavorite) {
+        if (updatedFilm.isFavorite && !state.favoriteFilms.find((f) => f.id === updatedFilm.id)) {
           state.favoriteFilms.push(updatedFilm);
         } else {
           state.favoriteFilms = state.favoriteFilms.filter((film) => film.id !== updatedFilm.id);

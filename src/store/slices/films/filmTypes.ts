@@ -11,6 +11,8 @@ export interface FilmsState {
   isFavoriteLoading: boolean;
   error: string | null;
   currentFilmError: string | null;
+  similarFilmsError: string | null;
+  favoriteFilmsError: string | null;
   selectedGenre: string;
   shownCount: number;
 }
