@@ -1,4 +1,3 @@
-// components/FilmCardFull/Poster.tsx
 import Image from 'next/image';
 import { JSX } from 'react';
 
