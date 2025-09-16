@@ -10,14 +10,13 @@ export function FilmList(): JSX.Element {
   const films = useAppSelector(selectFilteredFilms);
 
   if (!films || films.length === 0) {
-    // Добавил проверку на !films для надежности
     return <p className="catalog__empty-message">Movies not found.</p>;
   }
 
   return (
     <div className="catalog__films-list" role="list">
       {films
-        .filter((film) => film) // <-- Вот ключевое исправление
+        .filter((film) => film)
         .map((film) => (
           <FilmCard key={film.id} film={film} />
         ))}
