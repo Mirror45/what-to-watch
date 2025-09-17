@@ -6,7 +6,7 @@ import { JSX, useEffect } from 'react';
 import { Loading } from '@/components/Loading';
 import { VideoPlayer } from '@/components/VideoPlayer'; // Мы создадим этот компонент
 import { useAppDispatch, useAppSelector } from '@/store/hooks';
-import { selectCurrentFilm } from '@/store/selectors/films/films';
+import { selectCurrentFilm } from '@/store/selectors/films';
 import { clearCurrentFilm } from '@/store/slices/films/filmSlice';
 import { fetchFilmById } from '@/store/slices/films/filmThunks';
 

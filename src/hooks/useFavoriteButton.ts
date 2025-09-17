@@ -3,7 +3,7 @@
 import { usePathname, useRouter } from 'next/navigation';
 
 import { useAppDispatch, useAppSelector } from '@/store/hooks';
-import { selectIsAuthorized } from '@/store/selectors/auth/auth';
+import { selectIsAuthorized } from '@/store/selectors/auth';
 import { updateFavoriteStatus } from '@/store/slices/films/filmThunks';
 import { Film } from '@/types/film';
 

@@ -5,7 +5,7 @@ import { JSX, memo } from 'react';
 
 import { Loading } from '@/components/Loading';
 import { useAppSelector } from '@/store/hooks';
-import { selectPromo } from '@/store/selectors/promo/promo';
+import { selectPromo } from '@/store/selectors/promo';
 
 import { ActionButtons } from '../ActionButtons';
 

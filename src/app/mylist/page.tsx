@@ -6,7 +6,7 @@ import { FilmGrid } from '@/components/FilmGrid';
 import { Loading } from '@/components/Loading';
 import { ProtectedRoute } from '@/components/ProtectedRoute';
 import { useAppDispatch, useAppSelector } from '@/store/hooks';
-import { selectFavoriteFilms, selectIsFavoriteLoading } from '@/store/selectors/films/films';
+import { selectFavoriteFilms, selectIsFavoriteLoading } from '@/store/selectors/films';
 import { fetchFavoriteFilms } from '@/store/slices/films/filmThunks';
 
 export default function MyListPage(): JSX.Element {

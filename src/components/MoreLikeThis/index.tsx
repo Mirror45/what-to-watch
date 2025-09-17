@@ -5,7 +5,7 @@ import { useEffect } from 'react';
 import { FilmCard } from '@/components/FilmCard';
 import { MAX_SIMILAR_FILMS } from '@/constants';
 import { useAppDispatch, useAppSelector } from '@/store/hooks';
-import { selectCurrentFilm, selectSimilarFilms } from '@/store/selectors/films/films';
+import { selectCurrentFilm, selectSimilarFilms } from '@/store/selectors/films';
 import { fetchSimilarFilms } from '@/store/slices/films/filmThunks';
 
 export function MoreLikeThis() {

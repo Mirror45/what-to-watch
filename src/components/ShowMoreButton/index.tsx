@@ -3,7 +3,7 @@
 import { JSX } from 'react';
 
 import { useAppDispatch, useAppSelector } from '@/store/hooks';
-import { selectHasMore } from '@/store/selectors/films/films';
+import { selectHasMore } from '@/store/selectors/films';
 import { showMore } from '@/store/slices/films/filmSlice';
 
 export function ShowMoreButton(): JSX.Element {

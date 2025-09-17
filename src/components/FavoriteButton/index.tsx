@@ -2,7 +2,7 @@
 
 import { useFavoriteButton } from '@/hooks/useFavoriteButton';
 import { useAppSelector } from '@/store/hooks';
-import { selectIsAuthorized } from '@/store/selectors/auth/auth';
+import { selectIsAuthorized } from '@/store/selectors/auth';
 import { Film } from '@/types/film';
 
 interface FavoriteButtonProps {
