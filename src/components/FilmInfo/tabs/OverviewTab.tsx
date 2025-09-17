@@ -1,5 +1,5 @@
 import { Film } from '@/types/film';
-import { getRatingLevel } from '@/utils/film';
+import { getRatingLevel } from '@/utils';
 
 interface OverviewTabProps {
   film: Film;

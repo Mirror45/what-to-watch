@@ -1,17 +1,9 @@
 import { CommentGet } from '@/types/comment';
+import { formatReviewDate } from '@/utils';
 
 interface ReviewProps {
   review: CommentGet;
 }
-
-const formatReviewDate = (dateString: string): string => {
-  const date = new Date(dateString);
-  return date.toLocaleDateString('en-US', {
-    year: 'numeric',
-    month: 'long',
-    day: 'numeric',
-  });
-};
 
 export function Review({ review }: ReviewProps) {
   return (

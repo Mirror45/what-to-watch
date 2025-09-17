@@ -6,11 +6,9 @@ import { useParams, useRouter } from 'next/navigation';
 import { FormEvent, Fragment, JSX, useState } from 'react';
 import { toast, ToastContainer } from 'react-toastify';
 
+import { MAX_COMMENT_LENGTH, MIN_COMMENT_LENGTH } from '@/constants';
 import { useAppDispatch, useAppSelector } from '@/store/hooks';
 import { postComment } from '@/store/slices/comments/commentThunks';
-
-const MIN_COMMENT_LENGTH = 50;
-const MAX_COMMENT_LENGTH = 400;
 
 export function AddReviewForm(): JSX.Element {
   const router = useRouter();

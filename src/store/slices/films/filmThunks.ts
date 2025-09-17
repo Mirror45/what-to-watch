@@ -9,8 +9,7 @@ import {
 } from '@/store/actionTypes/films';
 import { ThunkError } from '@/types/errors';
 import { Film } from '@/types/film';
-import { api } from '@/utils/api';
-import { handleError } from '@/utils/handleError';
+import { api, handleError } from '@/utils';
 
 export const fetchFilms = createAsyncThunk<Film[], void, { rejectValue: ThunkError }>(
   FETCH_FILMS,

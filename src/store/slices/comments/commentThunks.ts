@@ -3,8 +3,7 @@ import { createAsyncThunk } from '@reduxjs/toolkit';
 import { FETCH_COMMENTS, POST_COMMENT } from '@/store/actionTypes/comments';
 import { CommentGet, CommentPost } from '@/types/comment';
 import { ThunkError } from '@/types/errors';
-import { api } from '@/utils/api';
-import { handleError } from '@/utils/handleError';
+import { api, handleError } from '@/utils';
 
 export const fetchComments = createAsyncThunk<
   CommentGet[],

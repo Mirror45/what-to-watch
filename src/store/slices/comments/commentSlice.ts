@@ -1,6 +1,5 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
 
-import { SLICE_NAME_COMMENTS } from '@/constants';
 import { CommentGet } from '@/types/comment';
 
 import { fetchComments, postComment } from './commentThunks';
@@ -15,7 +14,7 @@ const initialState: CommentsState = {
 };
 
 const commentsSlice = createSlice({
-  name: SLICE_NAME_COMMENTS,
+  name: 'comments',
   initialState,
   reducers: {},
   extraReducers: (builder) => {

@@ -2,9 +2,7 @@ import { createAsyncThunk } from '@reduxjs/toolkit';
 
 import { LOGIN_USER, LOGOUT_USER, RESTORE_SESSION } from '@/store/actionTypes/auth';
 import { ThunkError } from '@/types/errors';
-import { api } from '@/utils/api';
-import { handleError } from '@/utils/handleError';
-import { getToken, removeToken, setToken } from '@/utils/token';
+import { api, getToken, handleError, removeToken, setToken } from '@/utils';
 
 import { AuthInfo, LoginPayload } from './authTypes';
 

@@ -3,6 +3,7 @@
 import Image from 'next/image';
 import { useEffect, useState } from 'react';
 
+import { FILM_TABS, FilmTab } from '@/constants';
 import { useAppDispatch, useAppSelector } from '@/store/hooks';
 import { fetchComments } from '@/store/slices/comments/commentThunks';
 import { Film } from '@/types/film';
@@ -15,12 +16,9 @@ interface FilmInfoProps {
   film: Film;
 }
 
-const TABS = ['Overview', 'Details', 'Reviews'] as const;
-type Tab = (typeof TABS)[number];
-
 export function FilmInfo({ film }: FilmInfoProps) {
   const dispatch = useAppDispatch();
-  const [activeTab, setActiveTab] = useState<Tab>('Overview');
+  const [activeTab, setActiveTab] = useState<FilmTab>('Overview');
 
   const { comments, isLoading: areCommentsLoading } = useAppSelector((state) => state.comments);
 
@@ -51,7 +49,7 @@ export function FilmInfo({ film }: FilmInfoProps) {
         <div className="film-card__desc">
           <nav className="film-nav film-card__nav">
             <ul className="film-nav__list">
-              {TABS.map((tab) => (
+              {FILM_TABS.map((tab) => (
                 <li
                   key={tab}
                   className={`film-nav__item ${activeTab === tab ? 'film-nav__item--active' : ''}`}
