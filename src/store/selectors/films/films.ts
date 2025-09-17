@@ -1,3 +1,4 @@
+import { ALL_GENRES } from '@/constants';
 import { RootState } from '@/store/index';
 import { Film } from '@/types/film';
 
@@ -8,20 +9,20 @@ export const selectShownCount = (state: RootState) => state.films.shownCount;
 export const selectFilteredFilms = (state: RootState) => {
   const genre = state.films.selectedGenre;
   const films = state.films.all;
-  const filtered = genre === 'All genres' ? films : films.filter((f) => f.genre === genre);
+  const filtered = genre === ALL_GENRES ? films : films.filter((f) => f.genre === genre);
   return filtered.slice(0, state.films.shownCount);
 };
 
 export const selectAvailableGenres = (state: RootState) => {
   const allGenres = state.films.all.map((f) => f.genre);
   const uniqueGenres = Array.from(new Set(allGenres));
-  return ['All genres', ...uniqueGenres.slice(0, 9)];
+  return [ALL_GENRES, ...uniqueGenres.slice(0, 9)];
 };
 
 export const selectHasMore = (state: RootState) => {
   const genre = state.films.selectedGenre;
   const filtered =
-    genre === 'All genres' ? state.films.all : state.films.all.filter((f) => f.genre === genre);
+    genre === ALL_GENRES ? state.films.all : state.films.all.filter((f) => f.genre === genre);
   return state.films.shownCount < filtered.length;
 };
 
