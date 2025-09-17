@@ -4,7 +4,7 @@ import { JSX } from 'react';
 
 import { FilmCard } from '@/components/FilmCard';
 import { useAppSelector } from '@/store/hooks';
-import { selectFilteredFilms } from '@/store/selectors/films/films';
+import { selectFilteredFilms } from '@/store/selectors/films';
 
 export function FilmList(): JSX.Element {
   const films = useAppSelector(selectFilteredFilms);

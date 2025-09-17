@@ -3,7 +3,7 @@
 import { JSX } from 'react';
 
 import { useAppDispatch, useAppSelector } from '@/store/hooks';
-import { selectAvailableGenres, selectGenre } from '@/store/selectors/films/films';
+import { selectAvailableGenres, selectGenre } from '@/store/selectors/films';
 import { setGenre } from '@/store/slices/films/filmSlice';
 
 export function GenreList(): JSX.Element {

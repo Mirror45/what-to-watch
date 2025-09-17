@@ -9,7 +9,7 @@ import Header from '@/components/Header';
 import { Loading } from '@/components/Loading';
 import { ProtectedRoute } from '@/components/ProtectedRoute';
 import { useAppDispatch, useAppSelector } from '@/store/hooks';
-import { selectCurrentFilm } from '@/store/selectors/films/films';
+import { selectCurrentFilm } from '@/store/selectors/films';
 import { fetchFilmById } from '@/store/slices/films/filmThunks';
 
 export default function AddReviewPage(): JSX.Element {

@@ -6,7 +6,7 @@ import { JSX } from 'react';
 import { FavoriteButton } from '@/components/FavoriteButton';
 import { PlayButton } from '@/components/PlayButton';
 import { useAppSelector } from '@/store/hooks';
-import { selectIsAuthorized } from '@/store/selectors/auth/auth';
+import { selectIsAuthorized } from '@/store/selectors/auth';
 import { Film } from '@/types/film';
 
 interface ActionButtonsProps {
