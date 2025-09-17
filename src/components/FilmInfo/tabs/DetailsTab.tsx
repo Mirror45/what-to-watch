@@ -1,7 +1,7 @@
 import { Fragment } from 'react';
 
 import { Film } from '@/types/film';
-import { formatRunTime } from '@/utils/film';
+import { formatRunTime } from '@/utils';
 
 interface DetailsTabProps {
   film: Film;

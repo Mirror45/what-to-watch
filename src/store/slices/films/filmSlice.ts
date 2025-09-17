@@ -1,6 +1,6 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
 
-import { INITIAL_SHOWN_COUNT, SLICE_NAME_FILMS } from '@/constants';
+import { INITIAL_SHOWN_COUNT } from '@/constants';
 import { Film } from '@/types/film';
 
 import {
@@ -30,7 +30,7 @@ const initialState: FilmsState = {
 };
 
 const filmsSlice = createSlice({
-  name: SLICE_NAME_FILMS,
+  name: 'films',
   initialState,
   reducers: {
     setGenre: (state, action: PayloadAction<string>) => {

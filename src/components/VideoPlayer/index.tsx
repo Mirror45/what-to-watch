@@ -4,25 +4,13 @@ import { useRouter } from 'next/navigation';
 import { JSX, MouseEvent, useEffect, useRef, useState } from 'react';
 
 import { Loading } from '@/components/Loading';
+import { PLAYER_BUTTONS, PROGRESS_MAX, SPRITE_IDS } from '@/constants';
 import { Film } from '@/types/film';
+import { formatTime } from '@/utils';
 
 interface VideoPlayerProps {
   film: Film;
 }
-
-const formatTime = (seconds: number): string => {
-  const totalSeconds = Math.round(seconds);
-  const h = Math.floor(totalSeconds / 3600);
-  const m = Math.floor((totalSeconds % 3600) / 60);
-  const s = totalSeconds % 60;
-
-  const pad = (num: number) => String(num).padStart(2, '0');
-
-  if (h > 0) {
-    return `-${pad(h)}:${pad(m)}:${pad(s)}`;
-  }
-  return `-${pad(m)}:${pad(s)}`;
-};
 
 export function VideoPlayer({ film }: VideoPlayerProps): JSX.Element {
   const router = useRouter();
@@ -43,7 +31,7 @@ export function VideoPlayer({ film }: VideoPlayerProps): JSX.Element {
 
     const handleTimeUpdate = () => {
       if (isSeeking || isNaN(video.duration)) return;
-      setProgress((video.currentTime / video.duration) * 100);
+      setProgress((video.currentTime / video.duration) * PROGRESS_MAX);
       setTimeLeft(formatTime(video.duration - video.currentTime));
     };
 
@@ -86,8 +74,11 @@ export function VideoPlayer({ film }: VideoPlayerProps): JSX.Element {
       const clickPosition = evt.clientX - rect.left;
       const timelineWidth = rect.width;
 
-      const newProgressPercent = Math.max(0, Math.min(100, (clickPosition / timelineWidth) * 100));
-      const newTime = (newProgressPercent / 100) * videoRef.current.duration;
+      const newProgressPercent = Math.max(
+        0,
+        Math.min(PROGRESS_MAX, (clickPosition / timelineWidth) * PROGRESS_MAX),
+      );
+      const newTime = (newProgressPercent / PROGRESS_MAX) * videoRef.current.duration;
 
       videoRef.current.currentTime = newTime;
       setProgress(newProgressPercent);
@@ -135,11 +126,12 @@ export function VideoPlayer({ film }: VideoPlayerProps): JSX.Element {
   const handleTimelineMouseDown = (evt: MouseEvent<HTMLDivElement>) => {
     setIsSeeking(true);
     if (!timelineRef.current || !videoRef.current || isNaN(videoRef.current.duration)) return;
+
     const timeline = timelineRef.current;
     const rect = timeline.getBoundingClientRect();
     const clickPosition = evt.clientX - rect.left;
-    const newProgressPercent = (clickPosition / rect.width) * 100;
-    const newTime = (newProgressPercent / 100) * videoRef.current.duration;
+    const newProgressPercent = (clickPosition / rect.width) * PROGRESS_MAX;
+    const newTime = (newProgressPercent / PROGRESS_MAX) * videoRef.current.duration;
     videoRef.current.currentTime = newTime;
     setProgress(newProgressPercent);
   };
@@ -157,12 +149,12 @@ export function VideoPlayer({ film }: VideoPlayerProps): JSX.Element {
         onClick={handlePlayPause}
       />
       <button type="button" className="player__exit" onClick={handleExit}>
-        Exit
+        {PLAYER_BUTTONS.exit}
       </button>
       <div className="player__controls">
         <div className="player__controls-row">
           <div className="player__time" ref={timelineRef} onMouseDown={handleTimelineMouseDown}>
-            <progress className="player__progress" value={progress} max="100" />
+            <progress className="player__progress" value={progress} max={PROGRESS_MAX} />
             <div className="player__toggler" style={{ left: `${progress}%` }}>
               Toggler
             </div>
@@ -172,16 +164,16 @@ export function VideoPlayer({ film }: VideoPlayerProps): JSX.Element {
         <div className="player__controls-row">
           <button type="button" className="player__play" onClick={handlePlayPause}>
             <svg viewBox="0 0 19 19" width="19" height="19">
-              <use xlinkHref={isPlaying ? '#pause' : '#play-s'} />
+              <use xlinkHref={isPlaying ? SPRITE_IDS.pause : SPRITE_IDS.play} />
             </svg>
-            <span>{isPlaying ? 'Pause' : 'Play'}</span>
+            <span>{isPlaying ? PLAYER_BUTTONS.pause : PLAYER_BUTTONS.play}</span>
           </button>
           <div className="player__name">{film.name}</div>
           <button type="button" className="player__full-screen" onClick={handleFullscreen}>
             <svg viewBox="0 0 27 27" width="27" height="27">
-              <use xlinkHref={isFullscreen ? '#full-screen' : '#full-screen'} />
+              <use xlinkHref={isFullscreen ? SPRITE_IDS.fullscreen : SPRITE_IDS.fullscreen} />
             </svg>
-            <span>Full screen</span>
+            <span>{PLAYER_BUTTONS.fullscreen}</span>
           </button>
         </div>
       </div>

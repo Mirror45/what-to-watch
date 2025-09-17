@@ -1,7 +1,5 @@
 import { createSlice } from '@reduxjs/toolkit';
 
-import { SLICE_NAME_PROMO } from '@/constants';
-
 import { updateFavoriteStatus } from '../films/filmThunks';
 import { fetchPromoFilm } from './promoThunks';
 import { PromoState } from './promoTypes';
@@ -13,7 +11,7 @@ const initialState: PromoState = {
 };
 
 const promoSlice = createSlice({
-  name: SLICE_NAME_PROMO,
+  name: 'promo',
   initialState,
   reducers: {},
   extraReducers: (builder) => {

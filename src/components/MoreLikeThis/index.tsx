@@ -3,11 +3,10 @@
 import { useEffect } from 'react';
 
 import { FilmCard } from '@/components/FilmCard';
+import { MAX_SIMILAR_FILMS } from '@/constants';
 import { useAppDispatch, useAppSelector } from '@/store/hooks';
 import { selectCurrentFilm, selectSimilarFilms } from '@/store/selectors/films/films';
 import { fetchSimilarFilms } from '@/store/slices/films/filmThunks';
-
-const MAX_SIMILAR_FILMS = 4;
 
 export function MoreLikeThis() {
   const dispatch = useAppDispatch();
