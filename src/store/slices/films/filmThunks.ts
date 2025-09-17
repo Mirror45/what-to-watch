@@ -1,18 +1,11 @@
 import { createAsyncThunk } from '@reduxjs/toolkit';
 
-import {
-  FETCH_FAVORITE_FILMS,
-  FETCH_FILM_BY_ID,
-  FETCH_FILMS,
-  FETCH_SIMILAR_FILMS,
-  UPDATE_FAVORITE_STATUS,
-} from '@/store/actionTypes/films';
 import { ThunkError } from '@/types/errors';
 import { Film } from '@/types/film';
 import { api, handleError } from '@/utils';
 
 export const fetchFilms = createAsyncThunk<Film[], void, { rejectValue: ThunkError }>(
-  FETCH_FILMS,
+  'films/fetchFilms',
   async (_, thunkAPI) => {
     try {
       const { data } = await api.get<Film[]>('/films');
@@ -25,7 +18,7 @@ export const fetchFilms = createAsyncThunk<Film[], void, { rejectValue: ThunkErr
 );
 
 export const fetchFilmById = createAsyncThunk<Film, { id: string }, { rejectValue: ThunkError }>(
-  FETCH_FILM_BY_ID,
+  'films/fetchFilmById',
   async ({ id }, thunkAPI) => {
     try {
       const { data } = await api.get<Film>(`/films/${id}`);
@@ -41,7 +34,7 @@ export const fetchSimilarFilms = createAsyncThunk<
   Film[],
   { id: string },
   { rejectValue: ThunkError }
->(FETCH_SIMILAR_FILMS, async ({ id }, thunkAPI) => {
+>('films/fetchSimilarFilms', async ({ id }, thunkAPI) => {
   try {
     const { data } = await api.get<Film[]>(`/films/${id}/similar`);
     return data;
@@ -52,7 +45,7 @@ export const fetchSimilarFilms = createAsyncThunk<
 });
 
 export const fetchFavoriteFilms = createAsyncThunk<Film[], void, { rejectValue: ThunkError }>(
-  FETCH_FAVORITE_FILMS,
+  'films/fetchFavoriteFilms',
   async (_, thunkAPI) => {
     try {
       const { data } = await api.get<Film[]>('/favorite');
@@ -68,7 +61,7 @@ export const updateFavoriteStatus = createAsyncThunk<
   Film,
   { id: string; status: number },
   { rejectValue: ThunkError }
->(UPDATE_FAVORITE_STATUS, async ({ id, status }, thunkAPI) => {
+>('films/updateFavoriteStatus', async ({ id, status }, thunkAPI) => {
   try {
     const { data } = await api.post<Film>(`/favorite/${id}/${status}`);
     return data;

@@ -1,13 +1,12 @@
 import { createAsyncThunk } from '@reduxjs/toolkit';
 
-import { LOGIN_USER, LOGOUT_USER, RESTORE_SESSION } from '@/store/actionTypes/auth';
 import { ThunkError } from '@/types/errors';
 import { api, getToken, handleError, removeToken, setToken } from '@/utils';
 
 import { AuthInfo, LoginPayload } from './authTypes';
 
 export const loginUser = createAsyncThunk<AuthInfo, LoginPayload, { rejectValue: ThunkError }>(
-  LOGIN_USER,
+  'auth/loginUser',
   async ({ email, password }, thunkAPI) => {
     try {
       const { data } = await api.post<AuthInfo>('/login', { email, password });
@@ -21,7 +20,7 @@ export const loginUser = createAsyncThunk<AuthInfo, LoginPayload, { rejectValue:
 );
 
 export const restoreSession = createAsyncThunk<AuthInfo, void, { rejectValue: ThunkError }>(
-  RESTORE_SESSION,
+  'auth/restoreSession',
   async (_, thunkAPI) => {
     const token = getToken();
     if (!token) return thunkAPI.rejectWithValue({ message: 'No token found' });
@@ -37,7 +36,7 @@ export const restoreSession = createAsyncThunk<AuthInfo, void, { rejectValue: Th
 );
 
 export const logoutUser = createAsyncThunk<void, void, { rejectValue: ThunkError }>(
-  LOGOUT_USER,
+  'auth/logoutUser',
   async (_, thunkAPI) => {
     try {
       await api.delete('/logout');
