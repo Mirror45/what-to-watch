@@ -1,6 +1,6 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
 
-import { INITIAL_SHOWN_COUNT } from '@/constants';
+import { ALL_GENRES, INITIAL_SHOWN_COUNT } from '@/constants';
 import { Film } from '@/types/film';
 
 import {
@@ -25,7 +25,7 @@ const initialState: FilmsState = {
   currentFilmError: null,
   similarFilmsError: null,
   favoriteFilmsError: null,
-  selectedGenre: 'All genres',
+  selectedGenre: ALL_GENRES,
   shownCount: INITIAL_SHOWN_COUNT,
 };
 
