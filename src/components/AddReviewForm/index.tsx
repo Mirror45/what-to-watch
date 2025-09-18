@@ -3,12 +3,15 @@
 import 'react-toastify/dist/ReactToastify.css';
 
 import { useParams, useRouter } from 'next/navigation';
-import { FormEvent, Fragment, JSX, useState } from 'react';
+import { FormEvent, JSX } from 'react';
 import { toast, ToastContainer } from 'react-toastify';
 
-import { MAX_COMMENT_LENGTH, MIN_COMMENT_LENGTH } from '@/constants';
+import { useReviewForm } from '@/hooks/useReviewForm';
 import { useAppDispatch, useAppSelector } from '@/store/hooks';
 import { postComment } from '@/store/slices/comments/commentThunks';
+
+import { RatingStars } from './RatingStars';
+import { ReviewTextarea } from './ReviewTextarea';
 
 export function AddReviewForm(): JSX.Element {
   const router = useRouter();
@@ -18,25 +21,16 @@ export function AddReviewForm(): JSX.Element {
   const dispatch = useAppDispatch();
   const { isPosting } = useAppSelector((state) => state.comments);
 
-  const [rating, setRating] = useState(0);
-  const [comment, setComment] = useState('');
-
-  const isCommentValid =
-    comment.length >= MIN_COMMENT_LENGTH && comment.length <= MAX_COMMENT_LENGTH;
-  const isRatingValid = rating > 0;
-  const isFormValid = isCommentValid && isRatingValid;
+  const { rating, setRating, comment, setComment, isFormValid } = useReviewForm();
 
   const handleSubmit = async (evt: FormEvent<HTMLFormElement>) => {
     evt.preventDefault();
-    if (!isFormValid || isPosting) {
-      return;
-    }
+    if (!isFormValid || isPosting) return;
 
     try {
       await dispatch(postComment({ id: filmId, commentData: { comment, rating } })).unwrap();
       router.push(`/films/${filmId}`);
-      // eslint-disable-next-line @typescript-eslint/no-unused-vars
-    } catch (err) {
+    } catch {
       toast.error('Failed to post comment. Please try again.');
     }
   };
@@ -44,38 +38,14 @@ export function AddReviewForm(): JSX.Element {
   return (
     <div className="add-review">
       <ToastContainer theme="dark" position="top-right" autoClose={3000} />
-      <form action="#" className="add-review__form" onSubmit={handleSubmit}>
+      <form className="add-review__form" onSubmit={handleSubmit}>
         <fieldset disabled={isPosting} style={{ border: 'none', padding: 0 }}>
           <div className="rating">
-            <div className="rating__stars">
-              {Array.from({ length: 10 }, (_, i) => 10 - i).map((value) => (
-                <Fragment key={value}>
-                  <input
-                    className="rating__input"
-                    id={`star-${value}`}
-                    type="radio"
-                    name="rating"
-                    value={value}
-                    checked={rating === value}
-                    onChange={() => setRating(value)}
-                  />
-                  <label className="rating__label" htmlFor={`star-${value}`}>
-                    Rating {value}
-                  </label>
-                </Fragment>
-              ))}
-            </div>
+            <RatingStars rating={rating} onChange={setRating} />
           </div>
 
           <div className="add-review__text">
-            <textarea
-              className="add-review__textarea"
-              name="review-text"
-              id="review-text"
-              placeholder="Review text"
-              value={comment}
-              onChange={(e) => setComment(e.target.value)}
-            />
+            <ReviewTextarea value={comment} onChange={setComment} />
             <div className="add-review__submit">
               <button
                 className="add-review__btn"

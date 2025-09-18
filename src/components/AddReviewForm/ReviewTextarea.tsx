@@ -1,19 +1,19 @@
-import { JSX } from 'react';
+'use client';
 
-export function ReviewTextarea(): JSX.Element {
+type ReviewTextareaProps = {
+  value: string;
+  onChange: (text: string) => void;
+};
+
+export function ReviewTextarea({ value, onChange }: ReviewTextareaProps) {
   return (
-    <div className="add-review__text">
-      <textarea
-        className="add-review__textarea"
-        name="review-text"
-        id="review-text"
-        placeholder="Review text"
-      />
-      <div className="add-review__submit">
-        <button className="add-review__btn" type="submit">
-          Post
-        </button>
-      </div>
-    </div>
+    <textarea
+      className="add-review__textarea"
+      name="review-text"
+      id="review-text"
+      placeholder="Review text"
+      value={value}
+      onChange={(e) => onChange(e.target.value)}
+    />
   );
 }
