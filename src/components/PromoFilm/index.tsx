@@ -14,7 +14,7 @@ export const PromoFilm = memo((): JSX.Element => {
 
   if (isLoading || !film) {
     return (
-      <section className="film-card">
+      <section className="film-card" style={{ height: '475px', width: '100%' }}>
         <div className="film-card__bg">
           <Loading />
         </div>
