@@ -1,9 +1,9 @@
 import axios, { AxiosError, AxiosInstance, InternalAxiosRequestConfig } from 'axios';
 import { toast } from 'react-toastify';
 
-import { getToken } from './token';
+import { API_URL } from '@/config';
 
-const API_URL = 'https://16.design.htmlacademy.pro/wtw';
+import { getToken } from './token';
 
 export const createAPI = (): AxiosInstance => {
   const api = axios.create({
