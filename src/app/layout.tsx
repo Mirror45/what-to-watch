@@ -6,19 +6,28 @@ import { JSX, ReactNode } from 'react';
 import { ToastContainer } from 'react-toastify';
 
 import SvgSprite from '@/components/SvgSprite';
+import { APP_NAME, APP_URL } from '@/config';
 import StoreProvider from '@/providers/StoreProvider';
 
 export const metadata: Metadata = {
-  title: 'What to Watch — Next Gen Online Cinema',
+  title: {
+    default: `${APP_NAME} — online cinema`,
+    template: `%s | ${APP_NAME}`,
+  },
   description:
-    'Watch the latest movies online in high quality for free. Rate, review, and choose only the best from the world of cinema.',
+    'Watch movies online on "What to Watch". Browse by genres, promo films, and personalized recommendations.',
+  keywords: ['online cinema', 'movies', 'series', 'watch online', 'genres', 'new releases'],
+  metadataBase: new URL(APP_URL),
   openGraph: {
-    title: 'What to Watch — Next Gen Online Cinema',
-    description:
-      'Watch the latest movies online in high quality for free. Rate, review, and choose only the best from the world of cinema.',
-    siteName: 'What to Watch',
-    locale: 'en_US',
     type: 'website',
+    locale: 'en_US',
+    url: APP_URL,
+    siteName: APP_NAME,
+    title: `${APP_NAME} — online cinema`,
+    description: 'Watch the best movies online. Easy navigation by genres and curated promo films.',
+  },
+  icons: {
+    icon: '/favicon.ico',
   },
 };
 

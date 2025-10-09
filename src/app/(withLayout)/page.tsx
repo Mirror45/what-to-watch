@@ -1,36 +1,24 @@
-'use client';
+import { Metadata } from 'next';
 
-import { JSX, useEffect } from 'react';
+import { APP_URL } from '@/config';
 
-import { FilmList } from '@/components/FilmList';
-import { GenreList } from '@/components/GenreList';
-import { PromoFilm } from '@/components/PromoFilm';
-import { ShowMoreButton } from '@/components/ShowMoreButton';
-import { useAppDispatch } from '@/store/hooks';
-import { fetchFilms } from '@/store/slices/films';
-import { fetchPromoFilm } from '@/store/slices/promo';
+import HomeContainer from './HomeContainer';
 
-export default function HomePage(): JSX.Element {
-  const dispatch = useAppDispatch();
+export const metadata: Metadata = {
+  title: 'Home',
+  description:
+    'Main page of the online cinema "What to Watch". Watch promo films, choose genres, and find your favorite movies.',
+  alternates: {
+    canonical: APP_URL,
+  },
+  openGraph: {
+    title: 'Online cinema "What to Watch"',
+    description:
+      'Watch movies online at "What to Watch". Convenient genre filtering and movie selections.',
+    url: APP_URL,
+  },
+};
 
-  useEffect(() => {
-    dispatch(fetchFilms());
-    dispatch(fetchPromoFilm());
-  }, [dispatch]);
-
-  return (
-    <>
-      <PromoFilm />
-
-      <div className="page-content">
-        <section className="catalog">
-          <h2 className="catalog__title visually-hidden">Catalog</h2>
-
-          <GenreList />
-          <FilmList />
-          <ShowMoreButton />
-        </section>
-      </div>
-    </>
-  );
+export default function HomePage() {
+  return <HomeContainer />;
 }

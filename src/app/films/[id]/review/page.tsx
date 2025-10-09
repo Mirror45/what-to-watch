@@ -1,54 +1,46 @@
-'use client';
+import { Metadata } from 'next';
 
-import { useParams } from 'next/navigation';
-import { JSX, useEffect } from 'react';
+import { API_URL, APP_URL } from '@/config';
+import { ParamsWithId } from '@/types/pages';
 
-import { AddReviewForm } from '@/components/AddReviewForm';
-import { FilmCardFull } from '@/components/FilmCardFull';
-import Header from '@/components/Header';
-import { Loading } from '@/components/Loading';
-import { ProtectedRoute } from '@/components/ProtectedRoute';
-import { useAppDispatch, useAppSelector } from '@/store/hooks';
-import { selectCurrentFilm } from '@/store/selectors/films';
-import { fetchFilmById } from '@/store/slices/films/filmThunks';
+import AddReviewContainer from './AddReviewContainer';
 
-export default function AddReviewPage(): JSX.Element {
-  const params = useParams();
-  const filmId = params.id as string;
-  const dispatch = useAppDispatch();
+export async function generateMetadata({ params }: ParamsWithId): Promise<Metadata> {
+  let film = null;
 
-  const film = useAppSelector(selectCurrentFilm);
-  const isLoading = useAppSelector((state) => state.films.isCurrentFilmLoading);
-
-  useEffect(() => {
-    if (!film || film.id !== filmId) {
-      dispatch(fetchFilmById({ id: filmId }));
+  try {
+    const res = await fetch(`${API_URL}/films/${params.id}`);
+    if (res.ok) {
+      film = await res.json();
     }
-  }, [filmId, film, dispatch]);
-
-  if (isLoading || !film) {
-    return (
-      <ProtectedRoute>
-        <Loading />
-      </ProtectedRoute>
-    );
+  } catch {
+    film = null;
   }
 
-  return (
-    <ProtectedRoute>
-      <section
-        className="film-card film-card--full"
-        style={{ backgroundColor: film.backgroundColor }}
-      >
-        <Header
-          pageTitle="Add review"
-          showBreadcrumbs={true}
-          filmId={film.id}
-          filmTitle={film.name}
-        />
-        <FilmCardFull film={film} />
-        <AddReviewForm />
-      </section>
-    </ProtectedRoute>
-  );
+  if (!film) {
+    return {
+      title: 'Film not found',
+      description: 'This film is not available on "What to Watch".',
+      alternates: {
+        canonical: `${APP_URL}/films/${params.id}/review`,
+      },
+    };
+  }
+
+  return {
+    title: `Add Review — ${film.name}`,
+    description: `Leave your review for the film ${film.name} on "What to Watch".`,
+    alternates: {
+      canonical: `${APP_URL}/films/${film.id}/review`,
+    },
+    openGraph: {
+      title: `Add Review — ${film.name}`,
+      description: `Leave your review for the film ${film.name} on "What to Watch".`,
+      url: `${APP_URL}/films/${film.id}/review`,
+    },
+  };
+}
+
+export default function AddReviewPage({ params }: ParamsWithId) {
+  return <AddReviewContainer filmId={params.id} />;
 }

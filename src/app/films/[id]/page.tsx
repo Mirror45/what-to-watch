@@ -1,62 +1,44 @@
-'use client';
+import { Metadata } from 'next';
 
-import { JSX, Usable, use, useEffect } from 'react';
+import { API_URL, APP_URL } from '@/config';
+import { ParamsWithId } from '@/types/pages';
 
-import { FilmHero } from '@/components/FilmHero';
-import { FilmInfo } from '@/components/FilmInfo';
-import Footer from '@/components/Footer';
-import Header from '@/components/Header';
-import { Loading } from '@/components/Loading';
-import { MoreLikeThis } from '@/components/MoreLikeThis';
-import { useAppDispatch, useAppSelector } from '@/store/hooks';
-import { clearCurrentFilm } from '@/store/slices/films/filmSlice';
-import { fetchFilmById } from '@/store/slices/films/filmThunks';
+import FilmContainer from './FilmContainer';
 
-interface FilmPageProps {
-  params: Usable<{ id: string }>;
+export async function generateMetadata({ params }: ParamsWithId): Promise<Metadata> {
+  let film = null;
+
+  try {
+    const res = await fetch(`${API_URL}/films/${params.id}`);
+    if (res.ok) {
+      film = await res.json();
+    }
+  } catch {
+    film = null;
+  }
+
+  if (!film) {
+    return {
+      title: 'Film not found',
+      description: 'This film is not available in our database.',
+    };
+  }
+
+  return {
+    title: `${film.name}`,
+    description: film.description,
+    alternates: {
+      canonical: `${APP_URL}/films/${film.id}`,
+    },
+    openGraph: {
+      title: film.name,
+      description: film.description,
+      url: `${APP_URL}/films/${film.id}`,
+      images: [film.poster || '/og-image.jpg'],
+    },
+  };
 }
 
-export default function FilmPage({ params }: FilmPageProps): JSX.Element {
-  const { id } = use(params);
-  const dispatch = useAppDispatch();
-  const { currentFilm, isCurrentFilmLoading, currentFilmError } = useAppSelector(
-    (state) => state.films,
-  );
-
-  useEffect(() => {
-    if (id) {
-      dispatch(fetchFilmById({ id }));
-    }
-
-    return () => {
-      dispatch(clearCurrentFilm());
-    };
-  }, [id, dispatch]);
-
-  if (isCurrentFilmLoading) {
-    return <Loading />;
-  }
-
-  if (currentFilmError) {
-    return <p>Error: {currentFilmError}</p>;
-  }
-
-  if (!currentFilm) {
-    return <p>Film not found.</p>;
-  }
-
-  return (
-    <>
-      <Header />
-      <section className="film-card film-card--full">
-        <FilmHero film={currentFilm} />
-        <FilmInfo film={currentFilm} />
-      </section>
-
-      <div className="page-content">
-        <MoreLikeThis />
-      </div>
-      <Footer />
-    </>
-  );
+export default function FilmPage({ params }: ParamsWithId) {
+  return <FilmContainer filmId={params.id} />;
 }
