@@ -3,11 +3,11 @@ import { JSX } from 'react';
 import Footer from '@/components/Footer';
 import Header from '@/components/Header';
 
-interface FilmLayoutProps {
+interface LoginLayoutProps {
   children: React.ReactNode;
 }
 
-export default function FilmLayout({ children }: FilmLayoutProps): JSX.Element {
+export default function LoginLayout({ children }: LoginLayoutProps): JSX.Element {
   return (
     <>
       <Header pageTitle="Sign In" showBreadcrumbs={false} showUserBlock={false} />

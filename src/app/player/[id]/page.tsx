@@ -1,35 +1,43 @@
-'use client';
+import { Metadata } from 'next';
 
-import { useParams } from 'next/navigation';
-import { JSX, useEffect } from 'react';
+import { API_URL, APP_URL } from '@/config';
+import { ParamsWithId } from '@/types/pages';
 
-import { Loading } from '@/components/Loading';
-import { VideoPlayer } from '@/components/VideoPlayer'; // Мы создадим этот компонент
-import { useAppDispatch, useAppSelector } from '@/store/hooks';
-import { selectCurrentFilm } from '@/store/selectors/films';
-import { clearCurrentFilm } from '@/store/slices/films/filmSlice';
-import { fetchFilmById } from '@/store/slices/films/filmThunks';
+import PlayerContainer from './PlayerContainer';
 
-export default function PlayerPage(): JSX.Element {
-  const params = useParams();
-  const filmId = params.id as string;
-  const dispatch = useAppDispatch();
+export async function generateMetadata({ params }: ParamsWithId): Promise<Metadata> {
+  let film = null;
 
-  const film = useAppSelector(selectCurrentFilm);
-  const isLoading = useAppSelector((state) => state.films.isCurrentFilmLoading);
-
-  useEffect(() => {
-    if (filmId) {
-      dispatch(fetchFilmById({ id: filmId }));
+  try {
+    const res = await fetch(`${API_URL}/films/${params.id}`);
+    if (res.ok) {
+      film = await res.json();
     }
-    return () => {
-      dispatch(clearCurrentFilm());
-    };
-  }, [filmId, dispatch]);
-
-  if (isLoading || !film) {
-    return <Loading />;
+  } catch {
+    film = null;
   }
 
-  return <VideoPlayer film={film} />;
+  if (!film) {
+    return {
+      title: 'Film not available',
+      description: 'This film cannot be watched at the moment.',
+    };
+  }
+
+  return {
+    title: `Watch ${film.name} online`,
+    description: `Watch ${film.name} online in high quality on "What to Watch".`,
+    alternates: {
+      canonical: `${APP_URL}/player/${film.id}`,
+    },
+    openGraph: {
+      title: `Watch ${film.name} online`,
+      description: film.description,
+      url: `${APP_URL}/player/${film.id}`,
+      images: [film.poster || '/og-image.jpg'],
+    },
+  };
+}
+export default function PlayerPage({ params }: ParamsWithId) {
+  return <PlayerContainer filmId={params.id} />;
 }

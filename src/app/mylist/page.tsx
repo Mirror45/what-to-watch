@@ -1,32 +1,22 @@
-'use client';
+import { Metadata } from 'next';
 
-import { JSX, useEffect } from 'react';
+import { APP_URL } from '@/config';
 
-import { FilmGrid } from '@/components/FilmGrid';
-import { Loading } from '@/components/Loading';
-import { ProtectedRoute } from '@/components/ProtectedRoute';
-import { useAppDispatch, useAppSelector } from '@/store/hooks';
-import { selectFavoriteFilms, selectIsFavoriteLoading } from '@/store/selectors/films';
-import { fetchFavoriteFilms } from '@/store/slices/films/filmThunks';
+import MyListContainer from './MyListContainer';
 
-export default function MyListPage(): JSX.Element {
-  const dispatch = useAppDispatch();
-  const favoriteFilms = useAppSelector(selectFavoriteFilms);
-  const isLoading = useAppSelector(selectIsFavoriteLoading);
+export const metadata: Metadata = {
+  title: 'My List',
+  description: 'Your favorite movies on the online cinema "What to Watch".',
+  alternates: {
+    canonical: `${APP_URL}/my-list`,
+  },
+  openGraph: {
+    title: 'My List — What to Watch',
+    description: 'Watch your favorite movies online at "What to Watch".',
+    url: `${APP_URL}/my-list`,
+  },
+};
 
-  useEffect(() => {
-    dispatch(fetchFavoriteFilms());
-  }, [dispatch]);
-
-  return (
-    <ProtectedRoute>
-      <div className="user-page">
-        <section className="catalog">
-          <h2 className="catalog__title visually-hidden">Catalog</h2>
-
-          {isLoading ? <Loading /> : <FilmGrid films={favoriteFilms} />}
-        </section>
-      </div>
-    </ProtectedRoute>
-  );
+export default function MyListPage() {
+  return <MyListContainer />;
 }
