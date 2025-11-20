@@ -1,6 +1,8 @@
 import { Metadata } from 'next';
+import { JSX } from 'react';
 
 import { APP_URL } from '@/config';
+import StoreProvider from '@/providers/StoreProvider';
 
 import HomeContainer from './HomeContainer';
 
@@ -19,6 +21,10 @@ export const metadata: Metadata = {
   },
 };
 
-export default function HomePage() {
-  return <HomeContainer />;
+export default function HomePage(): JSX.Element {
+  return (
+    <StoreProvider>
+      <HomeContainer />
+    </StoreProvider>
+  );
 }

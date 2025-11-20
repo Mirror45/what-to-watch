@@ -1,15 +1,27 @@
 import { Metadata } from 'next';
+import { notFound } from 'next/navigation';
+import { JSX } from 'react';
 
 import { API_URL, APP_URL } from '@/config';
-import { ParamsWithId } from '@/types/pages';
+import StoreProvider from '@/providers/StoreProvider';
+import { makeStore } from '@/store';
+import { fetchComments } from '@/store/slices/comments';
+import { fetchFilmById, fetchSimilarFilms } from '@/store/slices/films';
 
 import FilmContainer from './FilmContainer';
 
-export async function generateMetadata({ params }: ParamsWithId): Promise<Metadata> {
+interface PageProps {
+  params: Promise<{ id: string }>;
+}
+
+export async function generateMetadata(props: PageProps): Promise<Metadata> {
+  const params = await props.params;
+  const { id } = params;
+
   let film = null;
 
   try {
-    const res = await fetch(`${API_URL}/films/${params.id}`);
+    const res = await fetch(`${API_URL}/films/${id}`);
     if (res.ok) {
       film = await res.json();
     }
@@ -39,6 +51,28 @@ export async function generateMetadata({ params }: ParamsWithId): Promise<Metada
   };
 }
 
-export default function FilmPage({ params }: ParamsWithId) {
-  return <FilmContainer filmId={params.id} />;
+export default async function FilmPage(props: PageProps): Promise<JSX.Element> {
+  const params = await props.params;
+  const { id } = params;
+
+  const store = makeStore();
+
+  try {
+    await Promise.all([
+      store.dispatch(fetchFilmById({ id })),
+      store.dispatch(fetchSimilarFilms({ id })),
+      store.dispatch(fetchComments({ id })),
+    ]);
+  } catch (error) {
+    console.error('Failed to fetch film data on server:', error);
+    notFound();
+  }
+
+  const preloadedState = store.getState();
+
+  return (
+    <StoreProvider preloadedState={preloadedState}>
+      <FilmContainer />
+    </StoreProvider>
+  );
 }

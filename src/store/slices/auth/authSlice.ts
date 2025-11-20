@@ -16,6 +16,7 @@ const authSlice = createSlice({
   reducers: {},
   extraReducers: (builder) => {
     builder
+      // Login
       .addCase(loginUser.pending, (state) => {
         state.status = 'loading';
         state.error = null;
@@ -29,14 +30,22 @@ const authSlice = createSlice({
         state.status = 'failed';
         state.error = typeof action.payload === 'string' ? action.payload : 'Login failed';
       })
+      // Restore Session
+      .addCase(restoreSession.pending, (state) => {
+        state.status = 'loading';
+        state.error = null;
+      })
       .addCase(restoreSession.fulfilled, (state, action: PayloadAction<AuthInfo>) => {
         state.status = 'succeeded';
         state.user = action.payload;
         state.token = action.payload.token;
       })
       .addCase(restoreSession.rejected, (state) => {
-        state.status = 'idle';
+        state.status = 'failed';
+        state.token = null;
+        state.user = null;
       })
+      // Logout
       .addCase(logoutUser.fulfilled, () => initialState);
   },
 });

@@ -2,12 +2,9 @@ import 'react-toastify/dist/ReactToastify.css';
 import './styles/main.css';
 
 import type { Metadata } from 'next';
-import { JSX, ReactNode } from 'react';
-import { ToastContainer } from 'react-toastify';
 
 import SvgSprite from '@/components/SvgSprite';
 import { APP_NAME, APP_URL } from '@/config';
-import StoreProvider from '@/providers/StoreProvider';
 
 export const metadata: Metadata = {
   title: {
@@ -31,15 +28,12 @@ export const metadata: Metadata = {
   },
 };
 
-export default function RootLayout({ children }: { children: ReactNode }): JSX.Element {
+export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
     <html lang="en">
       <body>
         <SvgSprite />
-        <StoreProvider>
-          <main>{children}</main>
-        </StoreProvider>
-        <ToastContainer position="top-right" autoClose={3000} />
+        {children}
       </body>
     </html>
   );
