@@ -1,6 +1,7 @@
 import { Metadata } from 'next';
 
 import { APP_URL } from '@/config';
+import StoreProvider from '@/providers/StoreProvider';
 
 import MyListContainer from './MyListContainer';
 
@@ -18,5 +19,9 @@ export const metadata: Metadata = {
 };
 
 export default function MyListPage() {
-  return <MyListContainer />;
+  return (
+    <StoreProvider>
+      <MyListContainer />
+    </StoreProvider>
+  );
 }

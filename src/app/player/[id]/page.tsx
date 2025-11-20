@@ -1,6 +1,8 @@
 import { Metadata } from 'next';
+import { JSX } from 'react';
 
 import { API_URL, APP_URL } from '@/config';
+import StoreProvider from '@/providers/StoreProvider';
 import { ParamsWithId } from '@/types/pages';
 
 import PlayerContainer from './PlayerContainer';
@@ -38,6 +40,18 @@ export async function generateMetadata({ params }: ParamsWithId): Promise<Metada
     },
   };
 }
-export default function PlayerPage({ params }: ParamsWithId) {
-  return <PlayerContainer filmId={params.id} />;
+
+interface PlayerPageProps {
+  params: Promise<{ id: string }>;
+}
+
+export default async function PlayerPage(props: PlayerPageProps): Promise<JSX.Element> {
+  const params = await props.params;
+  const { id } = params;
+
+  return (
+    <StoreProvider>
+      <PlayerContainer filmId={id} />
+    </StoreProvider>
+  );
 }

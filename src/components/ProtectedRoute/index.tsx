@@ -3,6 +3,7 @@
 import { useRouter } from 'next/navigation';
 import { useEffect } from 'react';
 
+import { Loading } from '@/components/Loading';
 import { useAppSelector } from '@/store/hooks';
 
 type ProtectedRouteProps = {
@@ -11,15 +12,19 @@ type ProtectedRouteProps = {
 
 export function ProtectedRoute({ children }: ProtectedRouteProps) {
   const router = useRouter();
-  const isAuthenticated = useAppSelector((state) => !!state.auth.token);
+  const { token, status } = useAppSelector((state) => state.auth);
 
   useEffect(() => {
-    if (!isAuthenticated) {
+    if (status !== 'idle' && status !== 'loading' && !token) {
       router.replace('/login');
     }
-  }, [isAuthenticated, router]);
+  }, [token, status, router]);
 
-  if (!isAuthenticated) return null;
+  if (status === 'idle' || status === 'loading') {
+    return <Loading />;
+  }
+
+  if (!token) return null;
 
   return <>{children}</>;
 }

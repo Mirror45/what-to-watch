@@ -1,6 +1,8 @@
 import { Metadata } from 'next';
+import { JSX } from 'react';
 
 import { API_URL, APP_URL } from '@/config';
+import StoreProvider from '@/providers/StoreProvider';
 import { ParamsWithId } from '@/types/pages';
 
 import AddReviewContainer from './AddReviewContainer';
@@ -41,6 +43,17 @@ export async function generateMetadata({ params }: ParamsWithId): Promise<Metada
   };
 }
 
-export default function AddReviewPage({ params }: ParamsWithId) {
-  return <AddReviewContainer filmId={params.id} />;
+interface AddReviewPageProps {
+  params: Promise<{ id: string }>;
+}
+
+export default async function AddReviewPage(props: AddReviewPageProps): Promise<JSX.Element> {
+  const params = await props.params;
+  const { id } = params;
+
+  return (
+    <StoreProvider>
+      <AddReviewContainer filmId={id} />
+    </StoreProvider>
+  );
 }

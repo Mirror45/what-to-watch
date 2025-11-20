@@ -1,6 +1,6 @@
 'use client';
 
-import { useEffect } from 'react';
+import { JSX } from 'react';
 
 import { FilmHero } from '@/components/FilmHero';
 import { FilmInfo } from '@/components/FilmInfo';
@@ -8,31 +8,36 @@ import Footer from '@/components/Footer';
 import Header from '@/components/Header';
 import { Loading } from '@/components/Loading';
 import { MoreLikeThis } from '@/components/MoreLikeThis';
-import { useAppDispatch, useAppSelector } from '@/store/hooks';
-import { clearCurrentFilm } from '@/store/slices/films/filmSlice';
-import { fetchFilmById } from '@/store/slices/films/filmThunks';
+import { useAppSelector } from '@/store/hooks';
 
-interface FilmContainerProps {
-  filmId: string;
-}
-
-export default function FilmContainer({ filmId }: FilmContainerProps) {
-  const dispatch = useAppDispatch();
+export default function FilmContainer(): JSX.Element {
   const { currentFilm, isCurrentFilmLoading, currentFilmError } = useAppSelector(
     (state) => state.films,
   );
 
-  useEffect(() => {
-    if (filmId) dispatch(fetchFilmById({ id: filmId }));
+  if (isCurrentFilmLoading) {
+    return <Loading />;
+  }
 
-    return () => {
-      dispatch(clearCurrentFilm());
-    };
-  }, [filmId, dispatch]);
+  if (currentFilmError) {
+    return (
+      <div className="user-page">
+        <Header />
+        <h1 className="page-title">Error: {currentFilmError}</h1>
+        <Footer />
+      </div>
+    );
+  }
 
-  if (isCurrentFilmLoading) return <Loading />;
-  if (currentFilmError) return <p>Error: {currentFilmError}</p>;
-  if (!currentFilm) return <p>Film not found.</p>;
+  if (!currentFilm) {
+    return (
+      <div className="user-page">
+        <Header />
+        <h1 className="page-title">Film not found</h1>
+        <Footer />
+      </div>
+    );
+  }
 
   return (
     <>

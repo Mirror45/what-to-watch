@@ -3,6 +3,8 @@
 import { JSX, useEffect } from 'react';
 
 import { FilmGrid } from '@/components/FilmGrid';
+import Footer from '@/components/Footer';
+import Header from '@/components/Header';
 import { Loading } from '@/components/Loading';
 import { ProtectedRoute } from '@/components/ProtectedRoute';
 import { useAppDispatch, useAppSelector } from '@/store/hooks';
@@ -21,11 +23,14 @@ export default function MyListContainer(): JSX.Element {
   return (
     <ProtectedRoute>
       <div className="user-page">
+        <Header pageTitle="My List" />
+
         <section className="catalog">
           <h2 className="catalog__title visually-hidden">Catalog</h2>
-
           {isLoading ? <Loading /> : <FilmGrid films={favoriteFilms} />}
         </section>
+
+        <Footer />
       </div>
     </ProtectedRoute>
   );

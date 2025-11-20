@@ -1,30 +1,29 @@
 'use client';
 
-import { ReactNode, useEffect } from 'react';
+import { useEffect, useRef } from 'react';
 import { Provider } from 'react-redux';
 
-import { store } from '@/store';
-import { useAppDispatch } from '@/store/hooks';
+import { AppStore, makeStore, RootState } from '@/store';
 import { restoreSession } from '@/store/slices/auth';
 
-interface Props {
-  children: ReactNode;
-}
+export default function StoreProvider({
+  children,
+  preloadedState,
+}: {
+  children: React.ReactNode;
+  preloadedState?: Partial<RootState>;
+}) {
+  const storeRef = useRef<AppStore | null>(null);
 
-function RestoreSession() {
-  const dispatch = useAppDispatch();
+  if (!storeRef.current) {
+    storeRef.current = makeStore(preloadedState);
+  }
+
   useEffect(() => {
-    dispatch(restoreSession());
-  }, [dispatch]);
+    if (storeRef.current) {
+      storeRef.current.dispatch(restoreSession());
+    }
+  }, []);
 
-  return null;
-}
-
-export default function StoreProvider({ children }: Props) {
-  return (
-    <Provider store={store}>
-      <RestoreSession />
-      {children}
-    </Provider>
-  );
+  return <Provider store={storeRef.current!}>{children}</Provider>;
 }

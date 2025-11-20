@@ -1,18 +1,25 @@
-import { configureStore } from '@reduxjs/toolkit';
+import { combineReducers, configureStore } from '@reduxjs/toolkit';
 
-import { authReducer } from '@/store/slices/auth';
-import { commentsReducer } from '@/store/slices/comments';
-import { filmReducer } from '@/store/slices/films';
-import { promoReducer } from '@/store/slices/promo';
+import { authReducer } from './slices/auth';
+import { commentsReducer } from './slices/comments';
+import { filmReducer } from './slices/films';
+import { promoReducer } from './slices/promo';
 
-export const store = configureStore({
-  reducer: {
-    auth: authReducer,
-    films: filmReducer,
-    promo: promoReducer,
-    comments: commentsReducer,
-  },
+const rootReducer = combineReducers({
+  auth: authReducer,
+  films: filmReducer,
+  promo: promoReducer,
+  comments: commentsReducer,
 });
 
-export type RootState = ReturnType<typeof store.getState>;
-export type AppDispatch = typeof store.dispatch;
+export type RootState = ReturnType<typeof rootReducer>;
+
+export const makeStore = (preloadedState?: Partial<RootState>) => {
+  return configureStore({
+    reducer: rootReducer,
+    preloadedState,
+  });
+};
+
+export type AppStore = ReturnType<typeof makeStore>;
+export type AppDispatch = AppStore['dispatch'];
