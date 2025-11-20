@@ -67,7 +67,7 @@ npm install
 npm run dev 
 ```
 
-> *The project uses the API at `http://localhost:3000/`.
+> *The application will be available at `http://localhost:3000/`.
 
 ---
 
