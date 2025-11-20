@@ -1,77 +1,55 @@
-# 🎬 What to Watch – Movie Catalog built with Next.js
+# 🎬 What to Watch — Online Cinema built with Next.js
 
-🚀 **Live Demo**: [what-to-watch-iota-ivory.vercel.app](https://what-to-watch-iota-ivory.vercel.app)
+**What to Watch** is a modern web application simulating an online cinema platform. The project demonstrates scalable frontend development using **Next.js 15 (App Router)**, strict **TypeScript** typing, and global state management via **Redux Toolkit**.
 
-A multifunctional SPA application for browsing a movie catalog, built with Next.js.
-The project features server-side rendering (SSR), a full authentication system with protected routes, dynamic content filtering, and personal movie lists.
-
-# 📖 Project Overview
-**What to Watch** is a comprehensive application simulating an online cinema platform. The project was developed to showcase the ability to build fast, modern, and scalable web applications using the Next.js framework.
-
-The main focus is on hybrid rendering (SSR + CSR) to achieve high performance and improved SEO. Complex state management, including user data, filters, and movie lists, is implemented using **Redux Toolkit**.
-
----
+The main architectural feature is **hybrid rendering (SSR + CSR)**. Data for movie pages is fetched on the server, forming the initial Redux state, which is then passed to the client (Hydration), ensuring excellent SEO optimization and fast First Contentful Paint.
 
 ## ✨ Key Features
 
-### 🚀 Server-Side Rendering (SSR) with Next.js
-The application leverages SSR to enable fast initial page loads, significantly improving both user experience and SEO.
+### 🚀 Hybrid Architecture (SSR + Client Components)
+* Built with **Next.js App Router**.
+* Movie pages (`/films/[id]`) are rendered on the server.
+* Implements the **Redux Store Injection** pattern: creating a unique store instance for each server request and passing `preloadedState` to the client via a custom `StoreProvider`.
 
-### 🔐 Full Authentication and Protected Routes
-A complete authentication flow is implemented (login/logout).  
-Private pages like “My List” and “Add Review” are accessible only to authenticated users. Unauthorized access attempts are automatically redirected to the login page.
+### 🔐 Authorization & Route Protection
+* Full Login and Logout system.
+* Token storage and session restoration upon page reload.
+* `ProtectedRoute` component for securing private pages ("My List", "Add Review").
+* Handling of **Race Conditions** during authorization checks.
 
-### ⭐ "My List" (Favorites) System
-Authenticated users can add movies to their personal “watchlist”.  
-The "+ My List / ✓ In List" button state and the counter in the header update instantly via Redux.
+### 🎥 Custom Video Player
+* Custom `useVideoPlayer` hook for managing the HTML5 Video API.
+* Features: Play/Pause, Fullscreen mode, custom progress bar (Timeline) with seeking capability (drag & drop), time remaining display.
+* Video previews on hover over movie cards in the catalog.
 
-### 🔍 Dynamic Filtering and Pagination
-Browse the movie catalog by genre. The genre list is generated dynamically based on the fetched data.  
-Content loads in chunks of 8 movies using the “Show more” button, providing smooth navigation without full page reloads.
+### 📂 Dynamic Catalog & Filtering
+* Movie filtering by genre via Redux.
+* Pagination using a "Show more" button (loads 8 cards at a time).
+* Movie page organized with Tabs: *Overview*, *Details*, *Reviews*.
 
-### 📝 Review System with Validation
-Users can submit reviews with a rating (from 1 to 10 stars).  
-The form includes built-in validation: the "Post" button remains disabled until a rating is selected and the comment length is between 50 and 400 characters.
-
-### 📄 Detailed Movie Page with Tabs
-Each movie has a dedicated page with detailed information organized into tabs: **Overview**, **Details**, and **Reviews**, allowing for a clean and structured presentation of content.
-
-### ▶️ Custom Video Player and Previews
-A custom video player is used for watching films, with basic playback controls.  
-Movie cards in the catalog feature video previews that autoplay on hover, creating a more dynamic and interactive UI.
-
+### ⭐ Favorites & Reviews
+* Add/Remove movies to the "My List" (Watchlist).
+* Review submission form with validation (rating + text length) and star rating visualization.
 
 ## 🛠 Tech Stack
 
-### 🚀 Core Stack
+### Core
+| Technology | Purpose |
+|------------|---------|
+| **Next.js 15** | Framework (App Router, Server Components). |
+| **React 19** | UI Library. |
+| **TypeScript** | Static typing. |
+| **Redux Toolkit** | Global state management (Slices, Thunks). |
+| **Axios** | HTTP client for API requests (with token interceptors). |
 
-| Technology    | Purpose                                                                                     |
-|---------------|---------------------------------------------------------------------------------------------|
-| Next.js       | A React framework for production. Provides SSR, file-based routing, and other optimizations. |
-| React         | Building declarative, component-based, and interactive user interfaces.                     |
-| TypeScript    | Adds static typing to improve code reliability and developer experience.                    |
-| Redux Toolkit | Centralized and predictable management of complex global application state.                 |
-| Axios         | Promise-based HTTP client for reliable backend API communication.                           |
-
-### 🧪 Quality Control Tools
-
-| Tool                              | Purpose                                          |
-|----------------------------------|-------------------------------------------------|
-| ESLint                           | Static code analysis to prevent errors and bad practices |
-| Prettier                        | Automatic code formatting                        |
-| Commitlint + Husky + Lint-Staged | Commit message checking, running linters/formatters before commit |
-| EditorConfig                    | Unifying basic editing rules (indentation, line breaks, etc.) |
-
-### 🔐 Husky
-
-Used to run Git hooks. The project has a pre-commit hook that:
-
-- Runs `eslint --fix` and `prettier --write` only on changed files.
-- Ensures badly formatted code does not get committed to the repository.
-
-### 🧼 Commitlint
-
-Checks commit messages for compliance with the Conventional Commits standard (e.g., `feat:`, `fix:`, `refactor:`).
+### Tools & Code Quality
+| Tool | Purpose |
+|------|---------|
+| **ESLint** | Code linting (Airbnb/Next configuration). |
+| **Prettier** | Code formatting. |
+| **Husky** | Git hooks (pre-commit). |
+| **Lint-staged** | Running linters on changed files only. |
+| **Commitlint** | Commit message validation (Conventional Commits). |
 
 ## 📦 Getting Started
 
@@ -86,32 +64,18 @@ cd what-to-watch
 npm install
 
 # Start the development server
-npm run dev
+npm run dev 
 ```
 
-## 🧠 Challenges & Future Improvements
-
-### ✅ Overcome Challenges
-
-- 🧩 **Hybrid rendering management**  
-  Properly structuring the code to work in both server (SSR) and client (interactivity) environments required deep understanding of Next.js lifecycle and `getServerSideProps`.
-
-- 🔐 **Protected routes architecture**  
-  Building a secure system for private pages involved implementing Higher-Order Components (HOC) or custom hooks to check user authorization status and handle redirects.
-
-- 🔄 **State synchronization**  
-  Keeping state in sync across different parts of the app (e.g., updating "My List" button and counter in the header in real-time) was achieved via centralized Redux Toolkit store.
+> *The project uses the API at `http://localhost:3000/`.
 
 ---
 
-### 🚧 Possible Improvements
+### 🔮 Roadmap
 
-- ⚡ **Switching to Static Site Generation (SSG)**  
-  For rarely-changing movie pages, using `getStaticProps` during build time could improve overall performance.
+In upcoming updates, we plan to introduce tools to improve reliability and automate processes:
 
-- 👤 **Add user profile page**  
-  A dedicated page where users can edit their info and view their review history.
+- ✅ **Unit Testing (Jest + React Testing Library)**: Test coverage for reducers, utilities, and key UI components.
 
-- 🔍 **Full-text catalog search**  
-  Implement search by movie title with suggestions and autocomplete.
+- ✅ **CI/CD (GitHub Actions)**: Setting up a pipeline to automatically run linters, tests, and build the project on every push to the repository.
 
